@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = '8840-utils'
+copyright = '2023, Bay Robotics'
+author = 'Bay Robotics'
 
 release = '0.1'
 version = '0.1.0'
@@ -33,3 +33,5 @@ html_theme = 'sphinx_rtd_theme'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+
+extensions = ["myst_parser"]

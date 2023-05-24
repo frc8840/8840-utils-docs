@@ -1,7 +1,7 @@
 API
 ===
 
-.. autosummary::
-   :toctree: generated
+The Javadocs can be found here:
 
-   lumache
+https://frc8840.github.io/8840-utils/build/docs/javadoc/index.html
+   
