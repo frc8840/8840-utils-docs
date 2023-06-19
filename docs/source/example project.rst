@@ -169,9 +169,648 @@ You should see a message like so:
 Interesting, right? This is primarly to communicate with :code:`8840-app`, our web app that allows you to do much more than just Shuffleboard, but we'll get to that later (again).
 
 .. note::
-    This will change soon with the release of v2023.3.0, with the introduction of the :code:`LibraryManager`. We'll update this when it does.
+    This step will change soon with the release of v2023.3.0, with the introduction of the :code:`LibraryManager`. We'll update this when it does.
+
+The main difference between Network Tables and our server is that they're different ways of communicating.
+
+Network Tables is a "websocket" - think of it as a phone call between the robot and the driver station.
+
+Our server is a "REST API" - think of it as a text message, or writing emails between the robot and the driver station.
+
+Generally, we'll be using Network Tables for things that need to be updated quickly, such as the robot's position, or the current speed of a motor.
+We'll be using our server for things that don't need to be updated as quickly, such as the complete trajectory of autonomous, or the current state of the robot.
+Our server also allows the driver station to tell us things such as which autonomous to choose - this could totally be done through NT, but we prefer to use our server for this.
+
+It also allows those who want to make their own driver station to communicate with :code:`8840-utils` with simple HTTP requests, which is pretty cool!
 
 A few more messages can be found, they're probably missing information though since you're not at a competition. 
 You should notice a message that says "Hello world!" though - that's the message we sent from the :code:`robotInit` method!
 
-Now, let's move on to the next part - the roller claw!
+Now, we're almost ready for the roller claw, we just need to create a few more things.
+
+Containers
+==========
+
+.. note::
+    This is where 8840-utils doesn't need to be used, this is generally how to set up a project.
+
+We'll start by creating a new file, called :code:`RobotContainer.java`. This will be the main class that will hold all of our subsystems and commands.
+
+First off, we'll add a :code:`static` instance of the class in order to access it from other classes, as well as make an instance when the container is created.
+
+.. code-block:: java
+    :linenos:
+
+    // In RobotContainer.java
+
+     private static RobotContainer instance;
+
+     public static RobotContainer getInstance() {
+         return instance;
+     }
+
+     public RobotContainer() {
+        instance = this;
+     }
+
+Now, moving back to the :code:`Robot` class, we'll add a few more things.
+
+.. code-block:: java
+    :linenos:
+
+     // In Robot.java
+
+     private RobotContainer robotContainer;
+
+     @Override
+     public void robotInit() {
+         // ...whatever was here before
+ 
+         robotContainer = new RobotContainer();
+     }
+
+     @Override
+     public void robotPeriodic() {
+         CommandScheduler.getInstance().run();
+     }
+
+
+Perfect, now we have a container that we can use to store all of our subsystems and commands!
+
+We'll now also create a file called :code:`Settings.java`. Here, we'll store all of our settings, such as motor ports, speeds, etc. This will make it easier to change things later on, but we'll add more to this later.
+
+Import REV API
+==============
+
+.. note::
+    We'll be using the REV API for this project. If you're using a different motor controller on your robot, this code will not be accurate to your robot.
+
+
+We'll start by importing the REV API. This will allow us to use the motor controllers. In VSCode, in the WPILib menu, click on Manage Vendor Libraries.
+
+Click on "Install new libraries (online)". This will open up a menu that will allow you to install libraries from the internet.
+
+Paste in the following link:
+
+.. code-block:: text
+
+    https://software-metadata.revrobotics.com/REVLib-2023.json
+
+Then run the build.
+
+.. warning::
+    This is only accurate for REV API v2023. If you're using a different version, you'll need to find the correct link.
+
+
+
+Roller Claw
+===========
+
+We'll start of by making a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
+
+Going back to :code:`Settings.java`, we'll first add in a few settings.
+
+There are a few different constants that we'll use - the speeds of a fast intake, a slow outtake, and a fast outtake. We'll also add in the motor port.
+
+We'll start of by making a new public class inside of :code:`Settings.java`, called :code:`Roller`.
+
+There, we'll put these constants:
+
+.. code-block:: java
+    :linenos:
+
+     public class Roller {
+         public static final int ROLLER_MOTOR_ID = 30;
+         public static final double FAST_OUTTAKE_SPEED = 0.7;
+         public static final double SLOW_OUTTAKE_SPEED = 0.1;
+         public static final double INTAKE_SPEED = -0.7;
+     }
+    
+
+It's a few random values, but generally accurate to what the robot had. Feel free to change these values to whatever you want.
+
+Now, we'll move back to :code:`Roller.java`. We'll start off by making it a subsystem.
+
+.. code-block:: java
+    :linenos:
+
+     // In Roller.java
+
+     public class Roller extends SubsystemBase {
+            // ...
+     }
+
+
+We'll add in our Spark Max motor controller variable first.
+
+.. code-block:: java
+    :linenos:
+
+     // In Roller.java
+
+     private CANSparkMax rollerMotor;
+
+
+Then, we'll need to initialize it in the constructor.
+
+.. code-block:: java
+    :linenos:
+
+     // In Roller.java
+
+     public Roller() {
+         //Assumption of use of a NEO brushless motor
+         rollerMotor = new CANSparkMax(Settings.Roller.ROLLER_MOTOR_ID, MotorType.kBrushless);
+     }
+
+We'll then add three methods - one for intaking, one for outtaking, and one for stopping. We'll also have outtaking take in a boolean, which will determine whether or not we want to outtake fast or slow.
+
+.. code-block:: java
+    :linenos:
+
+     // In Roller.java
+
+     public void intake() {
+         rollerMotor.set(Settings.Roller.INTAKE_SPEED);
+     }
+
+     public void outtake(boolean fast) {
+         if (fast) {
+             rollerMotor.set(Settings.Roller.FAST_OUTTAKE_SPEED);
+         } else {
+             rollerMotor.set(Settings.Roller.SLOW_OUTTAKE_SPEED);
+         }
+     }
+
+     public void stop() {
+         rollerMotor.set(0);
+     }
+
+
+Almost there! The Spark Max controllers are pretty useful, and have plenty of features that we can play with.
+
+Generally, the main things we'll want to set is the current limit, the ramp rate, and set the idle mode to break. We'll also want to tell it to slow down a bit on the CAN. 
+
+We'll add this to the constructor.
+
+.. code-block:: java
+    :linenos:
+
+     // In Roller.java
+
+     public Roller() {
+         //Assumption of use of a NEO brushless motor
+         rollerMotor = new CANSparkMax(Settings.Roller.ROLLER_MOTOR_ID, MotorType.kBrushless);
+
+         //Restore factory defaults
+         rollerMotor.restoreFactoryDefaults();
+
+         //Set the current limits
+         rollerMotor.setSmartCurrentLimit(25);
+         rollerMotor.setSecondaryCurrentLimit(30);
+
+         //Set the ramp rate since it jumps to full speed too quickly - don't want to break the robot!
+         rollerMotor.setOpenLoopRampRate(0.2);
+
+         //Set the idle mode to brake
+         rollerMotor.setIdleMode(IdleMode.kBrake);
+
+         //Set the CAN timeout to 20ms
+         rollerMotor.setCANTimeout(20);
+
+         //Update the settings
+         rollerMotor.burnFlash();
+     }
+
+We'll get to logging later, but for now we're done with the roller claw subsystem!
+
+Intergrating Controls
+=====================
+
+We need to start off by making a folder called "commands," then creating a new file called "OperatorControl.java"
+
+In this file, we'll make it extend "CommandBase," then add in a constructor, taking in a Roller. We'll store that in a private variable then use :code:`addRequirements` on it.
+
+.. code-block:: java
+    :linenos:
+
+     // In OperatorControl.java
+
+     public class OperatorControl extends CommandBase {
+         private Roller roller;
+        
+         // Make sure the roller imported is the one from subsystems! Not from settings.
+         public OperatorControl(Roller roller) {
+             addRequirements(roller);
+             this.roller = roller;
+         }
+     }
+
+We then need to add in the :code:`execute` function of the command. This will be called every time the command is scheduled. Pretty much a loop!
+
+.. code-block:: java
+    :linenos:
+
+     // In OperatorControl.java
+
+     @Override
+     public void execute() {
+         // ...
+     }
+
+We'll add in another private varible with the type of PS4Controller, or XboxController. I'll be using PS4Controller for the operator, but if you're using a different one, you'll need to change it to that.
+
+.. code-block:: java
+    :linenos:
+
+     // In OperatorControl.java
+
+     private PS4Controller controller;
+
+First, we'll add in the port of the controller. We'll add this line into settings:
+
+.. code-block:: java
+    :linenos:
+
+     // In Settings.java
+
+     public static final int OPERATOR_CONTROLLER_PORT = 1;
+
+Then, we'll add in the controller in the constructor.
+
+.. code-block:: java
+    :linenos:
+
+     // In OperatorControl.java
+
+     public OperatorControl(Roller roller) {
+         addRequirements(roller);
+         this.roller = roller;
+         controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
+     }
+
+Then, in :code:`execute`, we'll add in a few if statements. We'll change the speed of the roller claw based on the button pressed or released.
+
+.. code-block:: java
+    :linenos:
+
+     @Override
+     public void execute() {
+         if (controller.getL2Button()) {
+             roller.inttake();
+         } else if (controller.getR2Button() || controller.getR1Button()) {
+             roller.outtake(controller.getR2Button());
+         } else {
+             roller.stop();
+         }
+     }
+
+Here, we're making it intake if the L2 button is down, if the R2 or R1 button is down, we'll outtake (if it's R2, it'll be fast), and if neither are down, we'll stop.
+
+We're done with the command! Now, we need to add all of this to the robot container.
+
+.. code-block:: java
+    :linenos:
+
+     // In RobotContainer.java
+
+     private Roller roller;
+
+     public RobotContainer() {
+         // ...
+
+         //Again, make sure that the right roller is imported!
+         roller = new Roller();
+
+         OperatorControl operatorControl = new OperatorControl(roller);
+
+         roller.setDefaultCommand(
+            operatorControl
+         );
+
+         // ...
+     }
+
+Perfect, our robot is now ready to intake and outtake balls!
+
+The Arm
+=======
+
+The arm is a bit more complicated than the roller claw, but it's still pretty simple.
+
+We'll start off by making a new file called "Arm.java" in the subsystems folder.
+
+We'll start off by making it extend SubsystemBase, then adding in two private variables for the motor controllers called "baseMotor" and "elbowMotor".
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     public class Arm extends SubsystemBase {
+         private CANSparkMax baseMotor;
+         private CANSparkMax elbowMotor;
+     }
+
+We also need to add in two more private variables of type :code:`SparkMaxEncoderWrapper`, called "baseEncoder" and "elbowEncoder". These will be used to get the position of the arm.
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     private SparkMaxEncoderWrapper baseEncoder;
+     private SparkMaxEncoderWrapper elbowEncoder;
+
+Going back to Settings.java, we'll add in a few pieces of important settings for the arm motors.
+
+.. code-block:: java
+    :linenos:
+
+     // In Settings.java
+
+     public static class Arm {
+         public static final int BASE_MOTOR_ID = 31;
+         public static final int ELBOW_MOTOR_ID = 32;
+ 
+         public static final double GEAR_RATIO = 192 / 1;
+ 
+         public static final PIDStruct BASE_PID = new PIDStruct(0.010, 0.0, 0.0);
+         public static final PIDStruct ELBOW_PID = new PIDStruct(0.010, 0.0, 0.0);
+ 
+         public static final double MAX_BASE_SPEED = 0.8;
+         public static final double MAX_ELBOW_SPEED = 0.8;
+ 
+         public static final double CLOSED_LOOP_RAMP_RATE = 1.0;
+     }
+
+.. warning::
+    These PID values were the ones that worked for our robot. 
+    If you're using our robot, you may want to consider recalibrating them, same with the max speed and ramp rate.
+
+In Arm.java, we need to setup the constructor.
+
+.. code-block:: java
+    :linenos:
+
+    // In Arm.java
+
+     public Arm() {
+         baseMotor = new CANSparkMax(Settings.Arm.BASE_MOTOR_ID, MotorType.kBrushless);
+         elbowMotor = new CANSparkMax(Settings.Arm.ELBOW_MOTOR_ID, MotorType.kBrushless);
+
+         baseEncoder = new SparkMaxEncoderWrapper(baseMotor);
+         elbowEncoder = new SparkMaxEncoderWrapper(elbowMotor);
+     }
+
+Then, let's add a bunch of settings customization. This is just general technical stuff, the function names are pretty self explaniatory.
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     // ...
+
+     private SparkMaxPIDController basePID;
+     private SparkMaxPIDController elbowPID;
+
+     // ...
+
+     public Arm() {
+        //...
+
+        baseEncoder.setManualOffset(true);
+        baseEncoder.setPosition(0);
+        baseEncoder.setManualConversion(Robot.isSimulation());
+
+        elbowEncoder.setManualOffset(true);
+        elbowEncoder.setPosition(0);
+        elbowEncoder.setManualConversion(Robot.isSimulation());
+
+        baseMotor.restoreFactoryDefaults();
+        elbowMotor.restoreFactoryDefaults();
+
+        baseMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        elbowMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        baseMotor.setSmartCurrentLimit(25);
+        baseMotor.setSecondaryCurrentLimit(30);
+
+        elbowMotor.setSmartCurrentLimit(25);
+        elbowMotor.setSecondaryCurrentLimit(30);
+
+        baseMotor.setClosedLoopRampRate(Settings.Arm.CLOSED_LOOP_RAMP_RATE);
+        elbowMotor.setClosedLoopRampRate(Settings.Arm.CLOSED_LOOP_RAMP_RATE);
+
+        baseMotor.enableVoltageCompensation(12);
+        elbowMotor.enableVoltageCompensation(12);
+
+        double positionConversionFactor = (1 / Settings.Arm.GEAR_RATIO) * 360;
+        baseEncoder.setPositionConversionFactor(positionConversionFactor);
+        elbowEncoder.setPositionConversionFactor(positionConversionFactor);
+
+        double velocityConversionFactor = positionConversionFactor / 60;
+        baseEncoder.setVelocityConversionFactor(velocityConversionFactor);
+        elbowEncoder.setVelocityConversionFactor(velocityConversionFactor);
+
+        basePID = baseMotor.getPIDController();
+        elbowPID = elbowMotor.getPIDController();
+
+        basePID.setP(Settings.Arm.BASE_PID.kP);
+        basePID.setI(Settings.Arm.BASE_PID.kI);
+        basePID.setD(Settings.Arm.BASE_PID.kD);
+        basePID.setIZone(Settings.Arm.BASE_PID.kIZone);
+        basePID.setFF(Settings.Arm.BASE_PID.kF);
+
+        elbowPID.setP(Settings.Arm.ELBOW_PID.kP);
+        elbowPID.setI(Settings.Arm.ELBOW_PID.kI);
+        elbowPID.setD(Settings.Arm.ELBOW_PID.kD);
+        elbowPID.setIZone(Settings.Arm.ELBOW_PID.kIZone);
+        elbowPID.setFF(Settings.Arm.ELBOW_PID.kF);
+
+        basePID.setOutputRange(-Settings.Arm.MAX_BASE_SPEED, Settings.Arm.MAX_BASE_SPEED);
+        elbowPID.setOutputRange(-Settings.Arm.MAX_ELBOW_SPEED, Settings.Arm.MAX_ELBOW_SPEED);
+
+        basePID.setFeedbackDevice(baseEncoder.getEncoder());
+        elbowPID.setFeedbackDevice(elbowEncoder.getEncoder());
+        
+        baseMotor.burnFlash();
+        elbowMotor.burnFlash();
+     }
+
+Through this, we've done a lot of the meat of the arm subsystem. Now, we need to add in the preset positions we'll used.
+
+To do this, we'll use enums. Enums will be a great way to set the positions later, and they're pretty easy to use.
+
+We'll create this enum with a bunch of empty values to start off, and later we can set them up.
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     public enum ArmPosition {
+         REST(0, 0),
+         GROUND_INTAKE(0, 0),
+         DOUBLE_SUBSTATION_INTAKE(0, 0),
+         HYBRID(0, 0),
+         MID_CONE(0, 0),
+         HIGH_CONE(0, 0);
+
+         public final double baseAngle;
+         public final double elbowAngle;
+
+         private ArmPosition(double baseAngle, double elbowAngle) {
+             this.baseAngle = baseAngle;
+             this.elbowAngle = elbowAngle;
+         }
+     }
+
+Now, we'll add in a function to set the arm to a position. We just use the built in REV API combined with 8840-utils' wrapper for the encoder to set the position.
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     // ...
+
+     private ArmPosition position = ArmPosition.REST;
+    
+     // ...
+
+     public void setArmPosition(ArmPosition position) {
+         this.position = position;
+
+         basePID.setReference(
+             baseEncoder.calculatePosition(position.baseAngle), 
+             ControlType.kPosition,
+             0
+         );
+ 
+         elbowPID.setReference(
+             elbowEncoder.calculatePosition(position.elbowAngle), 
+             ControlType.kPosition,
+             0
+         );
+     }
+
+We'll add in an open loop control as well for the arm for manual control, plus a get function for the current arm position.
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     public void setBaseSpeed(double speed) {
+         baseMotor.set(speed);
+     }
+
+     public void setElbowSpeed(double speed) {
+         elbowMotor.set(speed);
+     }
+
+     public ArmPosition getArmPosition() {
+         return position;
+     }
+
+.. note::
+    At this point you can probably tell that Jaiden is rushing on this. This will result in few explinations and a lot of code. Sorry about that.
+
+We'll also add in a function to report to NT the current arm angles.
+
+.. code-block:: java
+    :linenos:
+
+     // In Arm.java
+
+     public void reportToNetworkTables() {
+         SmartDashboard.putNumber("Arm/Base Encoder", baseEncoder.getPosition());
+         SmartDashboard.putNumber("Arm/Elbow Encoder", elbowEncoder.getPosition());
+     }
+
+Going back over to OperatorControl.java, we'll add in a bunch of buttons to control the arm.
+
+.. code-block:: java
+    :linenos:
+
+     // ...
+     private Arm arm;
+     // ...
+
+     private final Arm.ArmPosition[] heightOrder = new ArmPosition[] {ArmPosition.HYBRID, ArmPosition.MID_CONE, ArmPosition.HIGH_CONE};
+     private int selectedPosition = 0; // The selected index of the height order, changed through the arrow keys on the PS4 controller.
+     private boolean armInPosition = false; // Whether the arm is in a preset position or in a rest position.
+
+     // Editing this function a bit!
+     public OperatorControl(Roller roller, Arm arm) {
+         addRequirements(roller, arm);
+         this.roller = roller;
+         this.arm = arm;
+         // ...
+     }
+
+     @Override
+     public void execute() {
+         // ...
+
+         if (controller.getPOV() == 270) {
+             selectedPosition--;
+             if (selectedPosition < 0) {
+                 selectedPosition = heightOrder.length - 1;
+             }
+         } else if (controller.getPOV() == 90) {
+             selectedPosition++;
+             if (selectedPosition >= heightOrder.length) {
+                 selectedPosition = 0;
+             }
+         }
+
+         if (controller.getCircleButtonReleased()) {
+             armInPosition = !armInPosition;
+
+             if (armInPosition) {
+                 arm.setArmPosition(heightOrder[selectedPosition]);
+             } else {
+                 arm.setArmPosition(ArmPosition.REST);
+             }
+         } else if (controller.getCrossButtonReleased() && !armInPosition) {
+             arm.setArmPosition(ArmPosition.DOUBLE_SUBSTATION_INTAKE);
+ 
+             armInPosition = true;
+         }
+
+         arm.reportToNetworkTables();
+
+         SmartDashboard.putString("Selected Position", heightOrder[selectedPosition].name());
+
+         // ...
+     }
+
+
+Wow, now the arm should be pretty much done! We just need to go back over to the RobotContainer and fix the error that we have there.
+
+.. code-block:: java
+    :linenos:
+
+     // In RobotContainer.java
+
+     // ...
+
+     private Arm arm;
+
+     // ...
+
+     public RobotContainer() {
+         // ...
+
+         arm = new Arm();
+         
+         // ...
+
+         OperatorControl operatorControl = new OperatorControl(roller, arm);
+
+         // ...
+     }
+

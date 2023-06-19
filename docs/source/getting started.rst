@@ -128,7 +128,7 @@ In the instructions, it will prompt you whether you want to edit `build.gradle` 
 
 If the build fails, try running :code:`>Java: Clean Java Language Server Workspace`, then run :code:`./gradlew build` manually.
 
-Everything is ready to start using 8840-utils!
+Everything is ready to start using :code:`8840-utils`!
 
 .. note::
    Don't know where to get started? Try looking at our example tutorial, found :ref:`here<example-project>`!
