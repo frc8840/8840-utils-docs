@@ -814,3 +814,62 @@ Wow, now the arm should be pretty much done! We just need to go back over to the
          // ...
      }
 
+Swerve Drive
+============
+
+In 8840-utils, there's a pre-built swerve drive library, using NEOs and Spark Maxes. Through this, you can easily setup swerve drive following the examples in 8840-utils or our 2023 robot code.
+
+.. note::
+    Jaiden will add code eventually. This is just here if he forgets to.
+
+Swerve drive principles are pretty simple. We have two controllers for each module, 
+with one controlling the angle and the other controlling the speed.
+
+This pretty much combines the above two subsystems. 
+For the driving motor, it's a lot like the roller, but we set the speed to the axis of the controller.
+For the turning motor, it's a lot like the arm, we send an angle to it to make it go to a specific direction, but we change this based on the direction.
+
+Using some easy math, we can calculate what direction the motors should be pointing (which way should the robot go), and how fast.
+
+That's all of the logic for the base of swerve - we have something moving...ish.
+
+This assumes that all the angles are lined up in the same direction when the robot is turned on, but that's not always the case.
+This is where the encoders come in. For us, we use CANCoders.
+
+For 2023, we never used encoders for the arm. Why? Because we knew exactly how the arm will start at the start of the match, plus minus a few degrees, which was negligible.
+The match was also short enough that the Spark Max encoders weren't going to go really off. 
+If we use the robot for a long time, you start approaching the issues of using the built-in encoders, that they become a bit less accurate with more movement.
+
+.. warning::
+    What Jaiden is doing here is making a call out to 8840. We were fine not using encoders in 2023, but if we want a high performing robot, we may need to invest a bit of money into more encoders.
+
+
+But we don't know how the swerve modules will start off as at the start of the match. 
+The way we do this is by taking in the CANCoder angle, do a bit of math based on callibrations to figure out how far off it is from 0, then a bit more math is done to counteract an issue with Spark Max encoder positions not resetting to 0.
+
+By saving this angle and using it later in the calculations, we can make sure it's accurate even after the modules have been moved to different positions.
+
+Ok, now we have it moving around. But if you do some angle changes to which direction it's heading, you might see the modules snap back and forth. Which is bad.
+
+So, we have to do more math. We can optimize the angles to make sure that the modules never turn more than 180°.
+There's a built in function to WPILib that does this for us, but sometimes you have to be careful since it might just keep snapping back and forth.
+We messed up a motor because of this. You can create a few if statements to counteract any big movements and to make a few movements unoptimized to make sure it doesn't "lock."
+
+Through this we have an almost functional robot!
+
+Finally, rotating in place, or while moving. Luckily, WPILib has a function that calculates the positions of all of the swerve modules based on their positions, and the speed and angle you want to go at.
+The function also has an argument which is pretty much the speed at which you want to rotate at.
+
+By inputing that to, let's say, the x-axis of a joystick, you can have a rotating-while-moving swerve drive!
+
+Finally, driver oriented drive. It's pretty hard to drive swerve robot-oriented, so this is a big help.
+We have a absolute gyroscope on the robot, and based on the starting orientation of the robot, we can adjust the angle given by it.
+
+Through this, there's also an argument on the built-in WPILib function that will also take this in account.
+
+Through all of this, you can have a working swerve drive!
+
+.. warning::
+    The swerve drive in 8840-utils needs a lot of improving and fixing. 
+    There's a lot of issues that will most likely not be fixed until I have access to swerve drive again, so use at your own risk.
+
