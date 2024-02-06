@@ -169,7 +169,7 @@ You should see a message like so:
 Interesting, right? This is primarly to communicate with :code:`8840-app`, our web app that allows you to do much more than just Shuffleboard, but we'll get to that later (again).
 
 .. note::
-    This step will change soon with the release of v2023.3.0, with the introduction of the :code:`LibraryManager`. We'll update this when it does.
+    This layout looks different now, but just as long something appears is good.
 
 The main difference between Network Tables and our server is that they're different ways of communicating.
 
