@@ -875,6 +875,7 @@ In initializing the robot, we want to first declare a swerve settings, for what 
 For example:
 
 .. code-block:: java
+    
     SwerveSettings settings = new SwerveSettings();
 
     settings.maxSpeed = new Unit(4.5, Unit.Type.FEET);
@@ -896,6 +897,7 @@ For example:
 Then, we want to declare our Modules, so we can set them up with the angles and correct CAN IDs. Example (this is from our own robot):
 
 .. code-block:: java
+
     final ModuleConfig frontLeft = new ModuleConfig(11, 12, 23, 105.8203);
     final ModuleConfig frontRight = new ModuleConfig(18, 17, 22, 323.877);
     final ModuleConfig backRight = new ModuleConfig(16, 15, 21, 41.8359);
@@ -904,6 +906,7 @@ Then, we want to declare our Modules, so we can set them up with the angles and 
 Then, we can finally declare the swerve drive, and set it up with the settings and modules.
 
 .. code-block:: java
+
     SwerveDrive swerveDrive = new SwerveDrive(
         settings, 
         frontLeft, frontRight, backLeft, backRight,
@@ -913,6 +916,7 @@ Then, we can finally declare the swerve drive, and set it up with the settings a
 We also might want a wait-for-fullfill condition to make sure the swerve drive is fully set up before we start using it. (Only if you use EventListeners).
 
 .. code-block:: java
+
     Robot.getRealInstance().waitForFullfillConditions(
         3000
         new Promise((res, rej) -> {
