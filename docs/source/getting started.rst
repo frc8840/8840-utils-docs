@@ -77,11 +77,8 @@ You can select whether you want to open it in that window or a new one.
 Once done, the project will open and start building in the terminal screen at the bottom.
 This may fail, and that's OK. We'll be making a few changes to fix this.
 
-First, open the `gradle` folder, then open the `wrapper` folder. Open the `gradle-wrapper.properties` file. 
-Change the :code:`distribution-url` to :code:`https\://services.gradle.org/distributions/gradle-7.6-bin.zip`.
-
 Save the file, and close it. Open the `build.gradle` file in the root of the project.
-At the top, change the version of :code:`edu.wpi.first.GradleRIO` to whatever version of WPILib you installed (for example: :code:`2023.4.2`), then save it.
+At the top, change the version of :code:`edu.wpi.first.GradleRIO` to whatever version of WPILib you installed (for example: :code:`2024.2.1`), then save it.
 
 Open settings with `Ctrl + ,` or `Cmd + ,` (Control/Command + Comma) and search for :code:`java.import.gradle.java.home`, and set it to a Java 11 or 17 JDK (that's what we've found works best), IF YOU HAVE JAVA INSTALLED ALREADY. 
 It should automatically fill it in for you (hopefully).

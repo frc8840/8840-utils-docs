@@ -819,9 +819,6 @@ Swerve Drive
 
 In 8840-utils, there's a pre-built swerve drive library, using NEOs and Spark Maxes. Through this, you can easily setup swerve drive following the examples in 8840-utils or our 2023 robot code.
 
-.. note::
-    Jaiden will add code eventually. This is just here if he forgets to.
-
 Swerve drive principles are pretty simple. We have two controllers for each module, 
 with one controlling the angle and the other controlling the speed.
 
@@ -839,9 +836,6 @@ This is where the encoders come in. For us, we use CANCoders.
 For 2023, we never used encoders for the arm. Why? Because we knew exactly how the arm will start at the start of the match, plus minus a few degrees, which was negligible.
 The match was also short enough that the Spark Max encoders weren't going to go really off. 
 If we use the robot for a long time, you start approaching the issues of using the built-in encoders, that they become a bit less accurate with more movement.
-
-.. warning::
-    What Jaiden is doing here is making a call out to 8840. We were fine not using encoders in 2023, but if we want a high performing robot, we may need to invest a bit of money into more encoders.
 
 
 But we don't know how the swerve modules will start off as at the start of the match. 
@@ -869,7 +863,111 @@ Through this, there's also an argument on the built-in WPILib function that will
 
 Through all of this, you can have a working swerve drive!
 
+
+The actual Swerve Drive code
+============================
+
+I scrounged up the code from `this file`_.
+
+.. _this file: https://github.com/frc8840/8840-utils/blob/main/src/main/java/frc/team_8840_lib/examples/SwerveDriveExample.java
+
+In initializing the robot, we want to first declare a swerve settings, for what important things the swerve drive will need.
+For example:
+
+.. code-block:: java
+    SwerveSettings settings = new SwerveSettings();
+
+    settings.maxSpeed = new Unit(4.5, Unit.Type.FEET);
+    settings.trackWidth = new Unit(18.75, Unit.Type.INCHES);
+    settings.wheelBase = new Unit(18.75, Unit.Type.INCHES);
+
+    settings.invertGyro = true;
+    settings.canCoderInverted = true;
+
+    settings.drivePID = new PIDStruct(0.025, 0, 0, 0);
+    settings.turnPID = new PIDStruct(0.012, 0, 0, 0);
+
+    settings.updateKinematics();
+
+    //this is specifically for joystick input/not cause issues w/ the motors:
+    settings.threshold = 0.01;
+    settings.useThresholdAsPercentage = true;
+
+Then, we want to declare our Modules, so we can set them up with the angles and correct CAN IDs. Example (this is from our own robot):
+
+.. code-block:: java
+    final ModuleConfig frontLeft = new ModuleConfig(11, 12, 23, 105.8203);
+    final ModuleConfig frontRight = new ModuleConfig(18, 17, 22, 323.877);
+    final ModuleConfig backRight = new ModuleConfig(16, 15, 21, 41.8359);
+    final ModuleConfig backLeft = new ModuleConfig(13, 14, 24, 215.332);
+
+Then, we can finally declare the swerve drive, and set it up with the settings and modules.
+
+.. code-block:: java
+    SwerveDrive swerveDrive = new SwerveDrive(
+        settings, 
+        frontLeft, frontRight, backLeft, backRight,
+        new Pigeon(Pigeon.Type.TWO, 42)
+    );
+
+We also might want a wait-for-fullfill condition to make sure the swerve drive is fully set up before we start using it. (Only if you use EventListeners).
+
+.. code-block:: java
+    Robot.getRealInstance().waitForFullfillConditions(
+        3000
+        new Promise((res, rej) -> {
+            Promise.WaitThen(() -> { return m_swerveDrive.isReady(); }, res, rej, 10);
+        })
+    )
+
+Now, we can use the swerve drive! We can use the built-in functions to move the robot around, rotate it, and more. For example:
+
+.. code-block:: java
+
+    //getForward() is a function that returns the y-axis of the left joystick
+    //getStrafe() is a function that returns the x-axis of the left joystick
+
+    //...
+
+    //If the threshold is not met, stop the robot
+    if (Math.abs(getForward()) < 0.1 && Math.abs(getStrafe()) < 0.1) {
+        if (Math.abs(m_controller.getRightX()) < 0.1) {
+            m_swerveDrive.stop();
+        } else {
+            //If the rotate threshold is met, rotate the robot
+            m_swerveDrive.spin(Rotation2d.fromRadians(m_controller.getRightX()), Robot.isReal());
+        }
+        return;
+    }
+
+    //Create a new Translation2d with the x and y values of the controller.
+    Translation2d translation = new Translation2d(
+        getForward(), //forward from the controller
+        getStrafe() //strafe from the controller
+    );
+    
+    //Multiply by the max speed.
+    translation = translation.times(m_swerveDrive.getSettings().maxSpeed.get(Unit.Type.METERS));
+
+    //Drive
+    m_swerveDrive.drive(translation, Rotation2d.fromRadians(m_controller.getRightX()), true, Robot.isReal());
+
+
+This is a pretty good example on how to you can use the swerve drive.
+
+We're done with the swerve drive!
+
+Pleadings and Warnings
+======================
+
 .. warning::
-    The swerve drive in 8840-utils needs a lot of improving and fixing. 
-    There's a lot of issues that will most likely not be fixed until I have access to swerve drive again, so use at your own risk.
+    Please, I beg, do not use the autonomous libraries from 8840-utils. It's a mess. It's a mess that works, but it's a mess. They're also not updated to have the field from 2024 (in 8840-app) at least.
+    Instead, look into better ways to do autonomous, such as using the WPILib Trajectory library, or using tools like PathPlanner.
+    (AdvantageKit doesn't really work with 8840-utils, but it's a good tool to use for path planning).
+
+
+Yep, thank you! Any questions, please contact me.
+
+-- Jaiden, 2023
+
 
