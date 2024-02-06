@@ -911,9 +911,9 @@ Then, we can finally declare the swerve drive, and set it up with the settings a
     :linenos:
 
     SwerveDrive swerveDrive = new SwerveDrive(
-        settings, 
         frontLeft, frontRight, backLeft, backRight,
-        new Pigeon(Pigeon.Type.TWO, 42)
+        new Pigeon(Pigeon.Type.TWO, 42), //pigeon is a gyro (at CAN ID 42)
+        settings //settings from before
     );
 
 We also might want a wait-for-fullfill condition to make sure the swerve drive is fully set up before we start using it. (Only if you use EventListeners).
