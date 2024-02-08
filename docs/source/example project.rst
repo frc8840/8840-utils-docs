@@ -189,7 +189,7 @@ You should notice a message that says "Hello world!" though - that's the message
 Now, we're almost ready for the roller claw, we just need to create a few more things.
 
 Containers
-==========
+----------
 
 .. note::
     This is where 8840-utils doesn't need to be used, this is generally how to set up a project.
@@ -240,7 +240,7 @@ Perfect, now we have a container that we can use to store all of our subsystems 
 We'll now also create a file called :code:`Settings.java`. Here, we'll store all of our settings, such as motor ports, speeds, etc. This will make it easier to change things later on, but we'll add more to this later.
 
 Import REV API
-==============
+--------------
 
 .. note::
     We'll be using the REV API for this project. If you're using a different motor controller on your robot, this code will not be accurate to your robot.
@@ -264,7 +264,7 @@ Then run the build.
 
 
 Roller Claw
-===========
+-----------
 
 We'll start of by making a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
 
@@ -384,8 +384,8 @@ We'll add this to the constructor.
 
 We'll get to logging later, but for now we're done with the roller claw subsystem!
 
-Intergrating Controls
-=====================
+Integrating Controls
+---------------------
 
 We need to start off by making a folder called "commands," then creating a new file called "OperatorControl.java"
 
@@ -494,7 +494,7 @@ We're done with the command! Now, we need to add all of this to the robot contai
 Perfect, our robot is now ready to intake and outtake balls!
 
 The Arm
-=======
+-------
 
 The arm is a bit more complicated than the roller claw, but it's still pretty simple.
 
@@ -815,7 +815,7 @@ Wow, now the arm should be pretty much done! We just need to go back over to the
      }
 
 Swerve Drive
-============
+------------
 
 In 8840-utils, there's a pre-built swerve drive library, using NEOs and Spark Maxes. Through this, you can easily setup swerve drive following the examples in 8840-utils or our 2023 robot code.
 
@@ -865,7 +865,7 @@ Through all of this, you can have a working swerve drive!
 
 
 The actual Swerve Drive code
-============================
+----------------------------
 
 I scrounged up the code from `this file`_.
 
@@ -967,7 +967,7 @@ This is a pretty good example on how to you can use the swerve drive.
 We're done with the swerve drive!
 
 Pleadings and Warnings
-======================
+----------------------
 
 .. warning::
     Please, I beg, do not use the autonomous libraries from 8840-utils. It's a mess. It's a mess that works, but it's a mess. They're also not updated to have the field from 2024 (in 8840-app) at least.
