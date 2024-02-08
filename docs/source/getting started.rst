@@ -3,35 +3,25 @@ Getting Started
 
 .. _installation:
 
-Creating a project
+Installing WPILib
 ------------------
 
 .. note::
 
-   If you are using a computer that already had the Game Tools installed, as well as VSCode with the latest FRC extensions, you can skip this step.
+   If you are using a computer that already has the JDK, VSCode, the WPILib Extension for VSCode, and the WPILib itself installed, you can skip this step.
 
 .. note::
-   This is primarly for those who already have VSCode installed, and are transitioning into FRC. 
-   If you do not have VSCode installed, install it through `this guide`_ instead, then move to :ref:`Creating a new project`.
+   Even if you already have VSCode installed on your machine, we recommend installing a new version of VSCode, because this is the easiest way to get the WPILib Extension to run properly VSCode. (For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace.)
 
-.. _this guide: https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html
-
-First, install the latest release of WPILib from `here`_.
+First, download the latest release of WPILib from `the WPILib Github page`_.
 
 .. _here: https://github.com/wpilibsuite/allwpilib/releases
 
-While installing, click the "No" option to installing VSCode, since it's already installed. 
-After installation, open VSCode and open the Extensions page. Search for "WPILib" and install the extension.
+After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then "Next" and "Next" to use all of the defaults. 
 
-.. image:: images/wpilib-exten.png
-   :alt: VSCode Extensions
-   :align: center
+After the installation completes, find a folder in your home directory called "wpilib", open it, then open a folder inside called "vscode", and then open the "VSCode" application inside that folder. VSCode should now launch on your device.
 
-.. warning::
-   Make sure that the first four numbers of the version of the extension match the version of WPILib you installed. The above image was taken in 2023, so the version makes sense since it's 2023. 
-   If the version does not match, you can install their version of VSCode, then either use it, or move the extensions manually to your version of VSCode (not recommended unless you know what you're doing).
-
-Make sure to also check if you have the "Debugger for Java" extension installed. If not, install it.
+Make sure to also check if you have the "Debugger for Java" VSCode Extension installed. If not, install it.
 
 .. note::
    For these extensions to take affect, you must restart VSCode.
