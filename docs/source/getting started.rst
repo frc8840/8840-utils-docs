@@ -13,9 +13,12 @@ Installing WPILib
 .. note::
    Even if you already have VSCode installed on your machine, we recommend installing a new version of VSCode, because this is the easiest way to get the WPILib Extension to run properly VSCode. (For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace.)
 
-First, download the latest release of WPILib from `the WPILib Github page`_.
+First, download the latest release of WPILib from `their Github page`_.
 
-.. _here: https://github.com/wpilibsuite/allwpilib/releases
+.. _their Github page: https://github.com/wpilibsuite/allwpilib/releases
+
+.. note::
+   Even if you already have a JDK installed on your machine, installing WPILib will put a new copy of the JDK on your machine. This is OK, and makes everything easier because it's the right JDK version and won't interfere with any other projects you might have.
 
 After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then "Next" and "Next" to use all of the defaults. 
 
@@ -45,14 +48,13 @@ Click it, and type in "create," then click "WPILib: Create a new project."
    :alt: WPILib Create
    :align: center
 
-Once done, you should have a new tab open on VSCode that looks like a form, with a title of "Welcome to WPILib New Project Creator."
-First, click on the "Select project type" button. This will open a dropdown menu. Select "Template," then "java," then "Timed Robot."
+Once done, you should have a new tab open on VSCode that looks like a form, with a title of "Welcome to WPILib New Project Creator." Fill it out as follows.
 
-Select a new project folder - we recommend creating a new folder, then creating the project in it since the extension is always a little buggy.
+"Select a project type" button: This will open a dropdown menu. Select "Template," then "java," then "Timed Robot."
 
-Create a new name for the project, we recommend setting it to the same name as the new folder.
+"Base Folder": Click "Select a new project folder" and select the wpilib/2024 folder that you found vscode in.
 
-If you created a new folder, deselect the "Create a new folder?" option.
+"Project Name" Create a new name for the project folder, like "test-project", it will be created in the base folder.
 
 Type in your team number. For example, our team number is 8840, so we would type in 8840. If you are not part of Bay Robotics, your number will be different.
 
@@ -67,15 +69,8 @@ You can select whether you want to open it in that window or a new one.
 Once done, the project will open and start building in the terminal screen at the bottom.
 This may fail, and that's OK. We'll be making a few changes to fix this.
 
-Save the file, and close it. Open the `build.gradle` file in the root of the project.
-At the top, change the version of :code:`edu.wpi.first.GradleRIO` to whatever version of WPILib you installed (for example: :code:`2024.2.1`), then save it.
-
-Open settings with `Ctrl + ,` or `Cmd + ,` (Control/Command + Comma) and search for :code:`java.import.gradle.java.home`, and set it to a Java 11 or 17 JDK (that's what we've found works best), IF YOU HAVE JAVA INSTALLED ALREADY. 
-It should automatically fill it in for you (hopefully).
-
-.. note::
-   If you haven't installed a Temurin JDK yet, press the WPILib button in the top right of VSCode and search for :code:`>Java: Install New JDK` instead of whatever is in the search bar.
-   Install the 17 (LTS) version. Once down, do the above step.
+Open the `build.gradle` file in the root of the project.
+At the top, make sure the version of :code:`edu.wpi.first.GradleRIO` is set to :code:`2024.2.1`), and change/save if necessary.
 
 After, open the terminal again and run 
 
