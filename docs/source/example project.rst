@@ -191,12 +191,11 @@ Now, we're almost ready for the roller claw, we just need to create a few more t
 Containers
 ----------
 
-.. note::
-    This is where 8840-utils doesn't need to be used, this is generally how to set up a project.
+Next we are going to create a new class called "RobotContainer" to store all of our subsystems and commands. We do this just to keep them organized.
 
-We'll start by creating a new file, called :code:`RobotContainer.java`. This will be the main class that will hold all of our subsystems and commands.
+We'll start by creating a new file, called :code:`RobotContainer.java` in the :code:`java/frc/robot` folder.
 
-First off, we'll add a :code:`static` instance of the class in order to access it from other classes, as well as make an instance when the container is created.
+This class is a singleton (there should never be more than one) so we need to store a :code:`static` instance of the class in order to access it from other classes, as well as make an instance when the container is created.
 
 .. code-block:: java
     :linenos:
@@ -213,7 +212,7 @@ First off, we'll add a :code:`static` instance of the class in order to access i
         instance = this;
      }
 
-Now, moving back to the :code:`Robot` class, we'll add a few more things.
+Now, moving back to the :code:`Robot` class, we'll add a reference to the RobotContainer instance. 
 
 .. code-block:: java
     :linenos:
@@ -229,15 +228,17 @@ Now, moving back to the :code:`Robot` class, we'll add a few more things.
          robotContainer = new RobotContainer();
      }
 
+Also in the :code:`Robot` class we need to also tell the CommandSchedule (part of WPILib) to run on every execution of the :code:`robotPeriodic` function.
+
+.. code-block:: java
+    :linenos:
+
      @Override
      public void robotPeriodic() {
          CommandScheduler.getInstance().run();
      }
 
-
-Perfect, now we have a container that we can use to store all of our subsystems and commands!
-
-We'll now also create a file called :code:`Settings.java`. Here, we'll store all of our settings, such as motor ports, speeds, etc. This will make it easier to change things later on, but we'll add more to this later.
+Let's also create a file called :code:`Settings.java`. In a few minutes, we'll put some classes in there to store global settings, such as motor ports, speeds, etc. This will make it easier to change things later on, but we'll add more to this later.
 
 Import REV API
 --------------
@@ -254,12 +255,9 @@ Paste in the following link:
 
 .. code-block:: text
 
-    https://software-metadata.revrobotics.com/REVLib-2023.json
+   https://software-metadata.revrobotics.com/REVLib-2024.json
 
 Then run the build.
-
-.. warning::
-    This is only accurate for REV API v2023. If you're using a different version, you'll need to find the correct link.
 
 
 
