@@ -36,6 +36,17 @@ After the download completes, find the downloaded installer file (on MacOS this 
 
 After the installation completes, find a folder in your home directory called "wpilib" (you can use Finder on MacOS), open it, then open a folder inside called "vscode", and then open the "VSCode" application inside that folder. VSCode should now launch on your device.
 
+With VSCode open, open the Explorer in the left sidebar (where you can see the folders and files of the project). Open a directory called ".vscode" and then open a file inside called "settings.json". Add the following new line so that you code will format automatically when you save files:
+
+.. code-block:: java
+    :linenos:
+
+{
+   // add this line
+  "editor.formatOnSave": true,
+  // existing settings
+}
+
 Make sure to also check if you have the "Debugger for Java" VSCode Extension installed. If not, install it. You may have to restart VSCode for new extensions to take effect (but generally not in the latest versions of VSCode.
 
 .. note::
