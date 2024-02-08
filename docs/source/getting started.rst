@@ -29,6 +29,9 @@ Make sure to also check if you have the "Debugger for Java" VSCode Extension ins
 .. note::
    For these extensions to take affect, you must restart VSCode.
 
+.. note::
+   If you are using a Mac, you may need to install the Command Line Tools for Xcode. To do this, run :code:`xcode-select --install` in the terminal.
+
 Once all of this is installed, you can start making your project. 
 
 .. _Creating a new project:
@@ -85,9 +88,6 @@ The build should now be successful. If not, press the WPILib button on the top r
    :align: center
 
 Follow through any steps that appear. If it still doesn't work, try restarting VSCode, or ask on the Unofficial First Robotics Discord server, found here: https://discord.gg/frc.
-
-.. note::
-   If you are using a Mac, you may need to install the Command Line Tools for Xcode. To do this, run :code:`xcode-select --install` in the terminal.
 
 .. warning::
    In the future, the failure to build may come up again, OR the build.gradle file has an error. If this happens, try the above steps to fix the issue.
