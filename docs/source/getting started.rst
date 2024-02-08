@@ -14,7 +14,7 @@ First, download the latest release of WPILib from `their Github page`_.
 
 .. _their Github page: https://github.com/wpilibsuite/allwpilib/releases
 
-After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then "Next" and "Next" to use all of the defaults. 
+After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then with "Everything" selected, click "Install for this User". Then click "Next" on the screens that follow to use all of the defaults and complete the installation. 
 
 .. image:: images/wpilib_installer_1.png
    :alt: WPILib Installer 1
@@ -32,14 +32,11 @@ After the download completes, find the downloaded installer file (on MacOS this 
    Even if you already have a JDK installed on your machine, installing WPILib will put a new copy of the JDK on your machine. This is OK, and makes everything easier because it's the right JDK version and won't interfere with any other projects you might have.
 
 .. note::
-   Even if you already have VSCode installed on your machine, the WPILib install will install another version of VSCode, because this is the easiest way to get the WPILib Extension to run properly VSCode. (For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace.) This is also nice because it won't mess up the version of VSCode that you might be using with other coding projects.
+   Even if you already have VSCode installed on your machine, the WPILib install will install another version of VSCode, because this is the easiest way to get the WPILib Extension installed properly in VSCode. For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace. This is also nice because it won't mess up your main version of VSCode.
 
-After the installation completes, find a folder in your home directory called "wpilib", open it, then open a folder inside called "vscode", and then open the "VSCode" application inside that folder. VSCode should now launch on your device.
+After the installation completes, find a folder in your home directory called "wpilib" (you can use Finder on MacOS), open it, then open a folder inside called "vscode", and then open the "VSCode" application inside that folder. VSCode should now launch on your device.
 
-Make sure to also check if you have the "Debugger for Java" VSCode Extension installed. If not, install it.
-
-.. note::
-   For these extensions to take affect, you must restart VSCode.
+Make sure to also check if you have the "Debugger for Java" VSCode Extension installed. If not, install it. You may have to restart VSCode for new extensions to take effect (but generally not in the latest versions of VSCode.
 
 .. note::
    If you are using a Mac, you may need to install the Command Line Tools for Xcode. To do this, run :code:`xcode-select --install` in the terminal.
