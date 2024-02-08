@@ -10,17 +10,17 @@ Installing WPILib
 
    If you are using a computer that already has the JDK, VSCode, the WPILib Extension for VSCode, and the WPILib itself installed, you can skip this step.
 
-.. note::
-   Even if you already have VSCode installed on your machine, we recommend installing a new version of VSCode, because this is the easiest way to get the WPILib Extension to run properly VSCode. (For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace.)
-
 First, download the latest release of WPILib from `their Github page`_.
 
 .. _their Github page: https://github.com/wpilibsuite/allwpilib/releases
 
+After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then "Next" and "Next" to use all of the defaults. 
+
 .. note::
    Even if you already have a JDK installed on your machine, installing WPILib will put a new copy of the JDK on your machine. This is OK, and makes everything easier because it's the right JDK version and won't interfere with any other projects you might have.
 
-After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then "Next" and "Next" to use all of the defaults. 
+.. note::
+   Even if you already have VSCode installed on your machine, the WPILib install will install another version of VSCode, because this is the easiest way to get the WPILib Extension to run properly VSCode. (For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace.) This is also nice because it won't mess up the version of VSCode that you might be using with other coding projects.
 
 After the installation completes, find a folder in your home directory called "wpilib", open it, then open a folder inside called "vscode", and then open the "VSCode" application inside that folder. VSCode should now launch on your device.
 
