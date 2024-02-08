@@ -16,15 +16,15 @@ First, download the latest release of WPILib from `their Github page`_.
 
 After the download completes, find the downloaded installer file (on MacOS this is a file with .dmg file extension, most likely located in your Downloads folder), open it, and launch (double-click) the WPILibInstaller filer. Click "Yes" to start the installation, and then "Next" and "Next" to use all of the defaults. 
 
-.. image:: images/wpilib-installer-1.png
+.. image:: images/wpilib_installer_1.png
    :alt: WPILib Installer 1
    :align: center
 
-.. image:: images/wpilib-installer-2.png
+.. image:: images/wpilib_installer_2.png
    :alt: WPILib Installer 2
    :align: center
 
-.. image:: images/wpilib-installer-3.png
+.. image:: images/wpilib_installer_3.png
    :alt: WPILib Installer 3
    :align: center
 
