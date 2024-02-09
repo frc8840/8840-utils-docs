@@ -286,7 +286,7 @@ There are a few different constants that we'll use - the speeds of a fast intake
     
 It's a few random values, but generally accurate to what the robot had. Feel free to change these values to whatever you want.
 
-Next we'll make a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`. Modify the class declaration so that it extends the abstract class `SubsystemBase` provided by WPILib. You'll need to import the class.
+Next we'll make a new folder in "java/frc/robot" called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`. We'll make it extend the abstract class `SubsystemBase` provided by WPILib. You'll need to import the class.
 
 .. code-block:: java
     :linenos:
@@ -385,16 +385,16 @@ We'll get to logging later, but for now we're done with the roller claw subsyste
 Integrating Controls
 ---------------------
 
-We need to start off by making a folder called "commands," then creating a new file called "OperatorControl.java"
+We need to start off by making a folder next to "subsystems" in "java/frc/robot" called "commands" then creating a new file called "OperatorControl.java"
 
-In this file, we'll make it extend "CommandBase," then add in a constructor, taking in a Roller. We'll store that in a private variable then use :code:`addRequirements` on it.
+In this file, we'll make it extend "Command", then add in a constructor, taking in a Roller. We'll store that in a private variable then use :code:`addRequirements` on it.
 
 .. code-block:: java
     :linenos:
 
      // In OperatorControl.java
 
-     public class OperatorControl extends CommandBase {
+     public class OperatorControl extends Command {
          private Roller roller;
         
          // Make sure the roller imported is the one from subsystems! Not from settings.
