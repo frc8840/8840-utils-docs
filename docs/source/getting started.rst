@@ -34,7 +34,7 @@ After the download completes, find the downloaded installer file (on MacOS this 
 .. note::
    Even if you already have VSCode installed on your machine, the WPILib install will install another version of VSCode, because this is the easiest way to get the WPILib Extension installed properly in VSCode. For some reason, it doesn't seem to work to install it through the VSCode Extensions Markeplace. This is also nice because it won't mess up your main version of VSCode.
 
-After the installation completes, find a folder in your home directory called "wpilib" (you can use Finder on MacOS), open it, then open a folder inside called "vscode", and then open the "VSCode" application inside that folder. VSCode should now launch on your device.
+After the installation completes, find a folder in your home directory called "wpilib" (you can use Finder on MacOS), open it, then open a folder inside called "2024", and a folder inside that called "vscode", and then launch the "VSCode" application inside that folder (by double-clicking). VSCode should now launch on your device.
 
 With VSCode open, open the Explorer in the left sidebar (where you can see the folders and files of the project). Open a directory called ".vscode" and then open a file inside called "settings.json". Add the following new line so that you code will format automatically when you save files:
 
