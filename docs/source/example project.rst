@@ -596,7 +596,7 @@ Then, let's add a bunch of settings customization. This is just general technica
         elbowMotor.setSecondaryCurrentLimit(30);
 
         baseMotor.setClosedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
-        elbowMotor.setClosedLoopRampRate(Settings.Arm.CLOSED_LOOP_RAMP_RATE);
+        elbowMotor.setClosedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
 
         baseMotor.enableVoltageCompensation(12);
         elbowMotor.enableVoltageCompensation(12);
