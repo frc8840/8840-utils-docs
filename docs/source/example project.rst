@@ -228,7 +228,7 @@ Now, moving back to the :code:`Robot` class, let's add a reference to the RobotC
          robotContainer = new RobotContainer();
      }
 
-Also in the :code:`Robot` class we need to also tell the CommandSchedule (part of WPILib) to run on every execution of the :code:`robotPeriodic` function. You will need to import CommmandScheduler. [Need to explain why.]
+Also in the :code:`Robot` class we need to also tell the CommandScheduler (part of WPILib) to run on every execution of the :code:`robotPeriodic` function.  [Need to explain why.] You will need to import CommmandScheduler. (VSCode make this really easy, you just hover over the red underline and click "Quick Fix" button in the window that appears, and then select the option to "import" the library.)
 
 .. code-block:: java
     :linenos:
@@ -274,17 +274,19 @@ There are a few different constants that we'll use - the speeds of a fast intake
     :linenos:
 
      public class Settings {
+
+         // Roller settings
          public static final int ROLLER_MOTOR_ID = 30;
          public static final double FAST_OUTTAKE_SPEED = 0.7;
          public static final double SLOW_OUTTAKE_SPEED = 0.1;
          public static final double INTAKE_SPEED = -0.7;
+
+         // Additional settings will go here
      }
     
 It's a few random values, but generally accurate to what the robot had. Feel free to change these values to whatever you want.
 
-Next we'll make a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
-
-Now, we'll move back to :code:`Roller.java`. We'll start off by making it a subsystem.
+Next we'll make a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`. Modify the class declaration so that it extends the abstract class `SubsystemBase` provided by WPILib. You'll need to import the class.
 
 .. code-block:: java
     :linenos:
@@ -296,7 +298,8 @@ Now, we'll move back to :code:`Roller.java`. We'll start off by making it a subs
      }
 
 
-We'll add in our Spark Max motor controller variable first.
+We'll add in our Spark Max motor controller variable first. You'll need to import CANSparkMax from the rev robotics library.
+
 
 .. code-block:: java
     :linenos:
@@ -306,7 +309,7 @@ We'll add in our Spark Max motor controller variable first.
      private CANSparkMax rollerMotor;
 
 
-Then, we'll need to initialize it in the constructor.
+Then, we'll need to initialize it in the constructor. You'll need to import MotorType from the CANSparkLowLevel rev robotics library.
 
 .. code-block:: java
     :linenos:
@@ -315,7 +318,7 @@ Then, we'll need to initialize it in the constructor.
 
      public Roller() {
          //Assumption of use of a NEO brushless motor
-         rollerMotor = new CANSparkMax(Settings.Roller.ROLLER_MOTOR_ID, MotorType.kBrushless);
+         rollerMotor = new CANSparkMax(Settings.ROLLER_MOTOR_ID, MotorType.kBrushless);
      }
 
 We'll then add three methods - one for intaking, one for outtaking, and one for stopping. We'll also have outtaking take in a boolean, which will determine whether or not we want to outtake fast or slow.
@@ -326,14 +329,14 @@ We'll then add three methods - one for intaking, one for outtaking, and one for 
      // In Roller.java
 
      public void intake() {
-         rollerMotor.set(Settings.Roller.INTAKE_SPEED);
+         rollerMotor.set(Settings.INTAKE_SPEED);
      }
 
      public void outtake(boolean fast) {
          if (fast) {
-             rollerMotor.set(Settings.Roller.FAST_OUTTAKE_SPEED);
+             rollerMotor.set(Settings.FAST_OUTTAKE_SPEED);
          } else {
-             rollerMotor.set(Settings.Roller.SLOW_OUTTAKE_SPEED);
+             rollerMotor.set(Settings.SLOW_OUTTAKE_SPEED);
          }
      }
 
@@ -355,7 +358,7 @@ We'll add this to the constructor.
 
      public Roller() {
          //Assumption of use of a NEO brushless motor
-         rollerMotor = new CANSparkMax(Settings.Roller.ROLLER_MOTOR_ID, MotorType.kBrushless);
+         rollerMotor = new CANSparkMax(Settings.ROLLER_MOTOR_ID, MotorType.kBrushless);
 
          //Restore factory defaults
          rollerMotor.restoreFactoryDefaults();
