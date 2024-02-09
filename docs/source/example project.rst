@@ -193,14 +193,14 @@ Containers
 
 Next we are going to create a new class called "RobotContainer" to store all of our subsystems and commands. We do this just to keep them organized.
 
-We'll start by creating a new file, called :code:`RobotContainer.java` in the :code:`java/frc/robot` folder.
+Let's start by creating a new file, called :code:`RobotContainer.java` in the :code:`java/frc/robot` folder.
 
 This class is a singleton (there should never be more than one) so we need to store a :code:`static` instance of the class in order to access it from other classes, as well as make an instance when the container is created.
 
 .. code-block:: java
     :linenos:
 
-    // In RobotContainer.java
+    // Inside the RobotContainer class, in RobotContainer.java
 
      private static RobotContainer instance;
 
@@ -212,12 +212,12 @@ This class is a singleton (there should never be more than one) so we need to st
         instance = this;
      }
 
-Now, moving back to the :code:`Robot` class, we'll add a reference to the RobotContainer instance. 
+Now, moving back to the :code:`Robot` class, let's add a reference to the RobotContainer instance. 
 
 .. code-block:: java
     :linenos:
 
-     // In Robot.java
+     // Inside the Robot class, in Robot.java
 
      private RobotContainer robotContainer;
 
@@ -228,17 +228,17 @@ Now, moving back to the :code:`Robot` class, we'll add a reference to the RobotC
          robotContainer = new RobotContainer();
      }
 
-Also in the :code:`Robot` class we need to also tell the CommandSchedule (part of WPILib) to run on every execution of the :code:`robotPeriodic` function.
+Also in the :code:`Robot` class we need to also tell the CommandSchedule (part of WPILib) to run on every execution of the :code:`robotPeriodic` function. You will need to import CommmandScheduler. [Need to explain why.]
 
 .. code-block:: java
     :linenos:
+
+     // Inside the Robot class, in Robot.java
 
      @Override
      public void robotPeriodic() {
          CommandScheduler.getInstance().run();
      }
-
-Let's also create a file called :code:`Settings.java`. In a few minutes, we'll put some classes in there to store global settings, such as motor ports, speeds, etc. This will make it easier to change things later on, but we'll add more to this later.
 
 Import REV API
 --------------
@@ -264,20 +264,16 @@ Then run the build.
 Roller Claw
 -----------
 
-We'll start of by making a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
+In this section we're going to implement the code for running our first motor. Let's start with a very simple example, the roller of Team 8840's 2023 robot, which was just a simple motor.
 
-Going back to :code:`Settings.java`, we'll first add in a few settings.
+The first thing we need to do is create a file called :code:`Settings.java`. This is where we will store global settings, such as motor ports, speeds, etc. This will make it easier to change things later on.
 
 There are a few different constants that we'll use - the speeds of a fast intake, a slow outtake, and a fast outtake. We'll also add in the motor port.
-
-We'll start of by making a new public class inside of :code:`Settings.java`, called :code:`Roller`.
-
-There, we'll put these constants:
 
 .. code-block:: java
     :linenos:
 
-     public class Roller {
+     public class Settings {
          public static final int ROLLER_MOTOR_ID = 30;
          public static final double FAST_OUTTAKE_SPEED = 0.7;
          public static final double SLOW_OUTTAKE_SPEED = 0.1;
@@ -286,6 +282,8 @@ There, we'll put these constants:
     
 
 It's a few random values, but generally accurate to what the robot had. Feel free to change these values to whatever you want.
+
+We'll start of by making a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
 
 Now, we'll move back to :code:`Roller.java`. We'll start off by making it a subsystem.
 
