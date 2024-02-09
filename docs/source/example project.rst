@@ -525,7 +525,7 @@ Going back to Settings.java, we'll add in a few pieces of important settings for
 
      // In Settings.java
 
-     public static class Arm {
+         // ARM SETTINGS
          public static final int BASE_MOTOR_ID = 31;
          public static final int ELBOW_MOTOR_ID = 32;
  
@@ -538,7 +538,6 @@ Going back to Settings.java, we'll add in a few pieces of important settings for
          public static final double MAX_ELBOW_SPEED = 0.8;
  
          public static final double CLOSED_LOOP_RAMP_RATE = 1.0;
-     }
 
 .. warning::
     These PID values were the ones that worked for our robot. 
@@ -552,8 +551,8 @@ In Arm.java, we need to setup the constructor.
     // In Arm.java
 
      public Arm() {
-         baseMotor = new CANSparkMax(Settings.Arm.BASE_MOTOR_ID, MotorType.kBrushless);
-         elbowMotor = new CANSparkMax(Settings.Arm.ELBOW_MOTOR_ID, MotorType.kBrushless);
+         baseMotor = new CANSparkMax(Settings.BASE_MOTOR_ID, MotorType.kBrushless);
+         elbowMotor = new CANSparkMax(Settings.ELBOW_MOTOR_ID, MotorType.kBrushless);
 
          baseEncoder = new SparkMaxEncoderWrapper(baseMotor);
          elbowEncoder = new SparkMaxEncoderWrapper(elbowMotor);
@@ -568,8 +567,8 @@ Then, let's add a bunch of settings customization. This is just general technica
 
      // ...
 
-     private SparkMaxPIDController basePID;
-     private SparkMaxPIDController elbowPID;
+     private SparkPIDController basePID;
+     private SparkPIDController elbowPID;
 
      // ...
 
@@ -596,13 +595,13 @@ Then, let's add a bunch of settings customization. This is just general technica
         elbowMotor.setSmartCurrentLimit(25);
         elbowMotor.setSecondaryCurrentLimit(30);
 
-        baseMotor.setClosedLoopRampRate(Settings.Arm.CLOSED_LOOP_RAMP_RATE);
+        baseMotor.setClosedLoopRampRate(Settings.CLOSED_LOOP_RAMP_RATE);
         elbowMotor.setClosedLoopRampRate(Settings.Arm.CLOSED_LOOP_RAMP_RATE);
 
         baseMotor.enableVoltageCompensation(12);
         elbowMotor.enableVoltageCompensation(12);
 
-        double positionConversionFactor = (1 / Settings.Arm.GEAR_RATIO) * 360;
+        double positionConversionFactor = (1 / Settings.GEAR_RATIO) * 360;
         baseEncoder.setPositionConversionFactor(positionConversionFactor);
         elbowEncoder.setPositionConversionFactor(positionConversionFactor);
 
@@ -613,20 +612,20 @@ Then, let's add a bunch of settings customization. This is just general technica
         basePID = baseMotor.getPIDController();
         elbowPID = elbowMotor.getPIDController();
 
-        basePID.setP(Settings.Arm.BASE_PID.kP);
-        basePID.setI(Settings.Arm.BASE_PID.kI);
-        basePID.setD(Settings.Arm.BASE_PID.kD);
-        basePID.setIZone(Settings.Arm.BASE_PID.kIZone);
-        basePID.setFF(Settings.Arm.BASE_PID.kF);
+        basePID.setP(Settings.BASE_PID.kP);
+        basePID.setI(Settings.BASE_PID.kI);
+        basePID.setD(Settings.BASE_PID.kD);
+        basePID.setIZone(Settings.BASE_PID.kIZone);
+        basePID.setFF(Settings.BASE_PID.kF);
 
-        elbowPID.setP(Settings.Arm.ELBOW_PID.kP);
-        elbowPID.setI(Settings.Arm.ELBOW_PID.kI);
-        elbowPID.setD(Settings.Arm.ELBOW_PID.kD);
-        elbowPID.setIZone(Settings.Arm.ELBOW_PID.kIZone);
-        elbowPID.setFF(Settings.Arm.ELBOW_PID.kF);
+        elbowPID.setP(Settings.ELBOW_PID.kP);
+        elbowPID.setI(Settings.ELBOW_PID.kI);
+        elbowPID.setD(Settings.ELBOW_PID.kD);
+        elbowPID.setIZone(Settings.ELBOW_PID.kIZone);
+        elbowPID.setFF(Settings.ELBOW_PID.kF);
 
-        basePID.setOutputRange(-Settings.Arm.MAX_BASE_SPEED, Settings.Arm.MAX_BASE_SPEED);
-        elbowPID.setOutputRange(-Settings.Arm.MAX_ELBOW_SPEED, Settings.Arm.MAX_ELBOW_SPEED);
+        basePID.setOutputRange(-Settings.MAX_BASE_SPEED, Settings.MAX_BASE_SPEED);
+        elbowPID.setOutputRange(-Settings.MAX_ELBOW_SPEED, Settings.MAX_ELBOW_SPEED);
 
         basePID.setFeedbackDevice(baseEncoder.getEncoder());
         elbowPID.setFeedbackDevice(elbowEncoder.getEncoder());
