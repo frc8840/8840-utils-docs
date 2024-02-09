@@ -261,10 +261,10 @@ Then run the build.
 
 
 
-Roller Claw
------------
+Roller Motor
+------------
 
-In this section we're going to implement the code for running our first motor. Let's start with a very simple example, the roller of Team 8840's 2023 robot, which was just a simple motor.
+In this section we're going to implement the code for running our first motor. Let's start with a very simple example, the motor for the roller claw of Team 8840's 2023 robot. 
 
 The first thing we need to do is create a file called :code:`Settings.java`. This is where we will store global settings, such as motor ports, speeds, etc. This will make it easier to change things later on.
 
@@ -321,7 +321,7 @@ Then, we'll need to initialize it in the constructor. You'll need to import Moto
          rollerMotor = new CANSparkMax(Settings.ROLLER_MOTOR_ID, MotorType.kBrushless);
      }
 
-We'll then add three methods - one for intaking, one for outtaking, and one for stopping. We'll also have outtaking take in a boolean, which will determine whether or not we want to outtake fast or slow.
+We'll then add three methods: one for intaking, one for outtaking, and one for stopping. We'll also have outtaking take in a boolean, which will determine whether or not we want to outtake fast or slow. You'll see later that we will call these functions when we get commands from the OperatorControl.
 
 .. code-block:: java
     :linenos:
@@ -447,7 +447,7 @@ Then, we'll add in the controller in the constructor.
          controller = new PS4Controller(Settings.OPERATOR_CONTROLLER_PORT);
      }
 
-Then, in :code:`execute`, we'll add in a few if statements. We'll change the speed of the roller claw based on the button pressed or released.
+Then, in :code:`execute`, we'll add in calls to the functions `intake()`, `outtake()`, and `stop()` that we added to the Roller class above. Here, we're making it intake if the L2 button is down, if the R2 or R1 button is down, we'll outtake (if it's R2, it'll be fast), and if neither are down, we'll stop. We'll change the speed of the roller claw based on the button pressed or released.
 
 .. code-block:: java
     :linenos:
@@ -455,15 +455,13 @@ Then, in :code:`execute`, we'll add in a few if statements. We'll change the spe
      @Override
      public void execute() {
          if (controller.getL2Button()) {
-             roller.inttake();
+             roller.intake();
          } else if (controller.getR2Button() || controller.getR1Button()) {
              roller.outtake(controller.getR2Button());
          } else {
              roller.stop();
          }
      }
-
-Here, we're making it intake if the L2 button is down, if the R2 or R1 button is down, we'll outtake (if it's R2, it'll be fast), and if neither are down, we'll stop.
 
 We're done with the command! Now, we need to add all of this to the robot container.
 
