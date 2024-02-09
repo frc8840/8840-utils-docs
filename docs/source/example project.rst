@@ -280,10 +280,9 @@ There are a few different constants that we'll use - the speeds of a fast intake
          public static final double INTAKE_SPEED = -0.7;
      }
     
-
 It's a few random values, but generally accurate to what the robot had. Feel free to change these values to whatever you want.
 
-We'll start of by making a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
+Next we'll make a new package (folder) called "subsystems". In that folder, we'll make a new file called :code:`Roller.java`.
 
 Now, we'll move back to :code:`Roller.java`. We'll start off by making it a subsystem.
 
